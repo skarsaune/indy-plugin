@@ -3,7 +3,6 @@ package no.kantega.jvm.indy.compiler.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 public class IndyMethodMappings {
@@ -17,13 +16,16 @@ public class IndyMethodMappings {
 		}
 		return instance;
 	}
-	private Map<MethodSymbol, MethodSymbol> mappings=new HashMap<MethodSymbol, MethodSymbol>();
+	private Map<String, MethodSymbol> mappings=new HashMap<String, MethodSymbol>();
 	private IndyMethodMappings() {}
 	public void mapMethod(MethodSymbol fromMethod, MethodSymbol toMethod) {
-		this.mappings.put(fromMethod, toMethod);	
+		this.mappings.put(describeFromMethod(fromMethod), toMethod);	
 	}
-	public MethodSymbol mappingFor(Symbol sym) {
-		return this.mappings.get(sym);
+	private String describeFromMethod(MethodSymbol fromMethod) {
+		return fromMethod.owner + "." +  fromMethod + " : " + fromMethod.getReturnType();
+	}
+	public MethodSymbol mappingFor(MethodSymbol sym) {
+		return this.mappings.get(describeFromMethod(sym));
 		
 	}
 }

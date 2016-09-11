@@ -12,17 +12,14 @@ import com.sun.source.util.TaskListener;
  */
 public class GenerateInvokeDynamicHandler implements TaskListener {
 
-	public void finished(TaskEvent end) {
-	}
-
 	public void started(TaskEvent start) {
 		if(start.getKind() == Kind.GENERATE) {
 			for (Tree tree : start.getCompilationUnit().getTypeDecls()) {
 				tree.accept(new IndyMethodInvocationReplacer(), tree);
 			}
-			start.getTypeElement();
 		}
-
 	}
 
+	public void finished(TaskEvent end) {
+	}
 }

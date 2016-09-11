@@ -1,6 +1,5 @@
 package no.kantega.jvm.indy.compiler.plugin;
 
-import javax.lang.model.element.Modifier;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -8,10 +7,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic.Kind;
 
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -113,6 +113,12 @@ public class IndyAnnotationChecker extends AbstractProcessor {
 		if(!method.getModifiers().contains(Modifier.PUBLIC)) {
 			processingEnv.getMessager().printMessage(Kind.ERROR,
 					"Implementation method " + method + " must be public", element);
+			return false;
+		}
+		
+		if(!"java.lang.invoke.CallSite".equals(method.getReturnType().toString())) {
+			processingEnv.getMessager().printMessage(Kind.ERROR,
+					"Implementation method " + method + " must return a CallSite", element);
 			return false;
 		}
 		
