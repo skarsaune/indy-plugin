@@ -18,7 +18,6 @@ public class InvokeDynamicReplacementTest {
 		runResult.assertSuccess();
 		runResult.assertOutputText("Bootstrap method called");
 		runResult.assertOutputText("Actual method called");
-
 	}
 
 }
