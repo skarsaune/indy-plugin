@@ -25,6 +25,7 @@ import no.kantega.jvm.dynamic.annotation.IndyMethod;
 /**
  * Ensure that setup is correct and referenced @IndyMethod is correct
  */
+@SuppressWarnings("restriction")
 @SupportedAnnotationTypes("no.kantega.jvm.dynamic.annotation.IndyMethod")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)//NB: *Latest* supported edition
 public class IndyAnnotationChecker extends AbstractProcessor {
@@ -70,7 +71,8 @@ public class IndyAnnotationChecker extends AbstractProcessor {
 		if(this.processingEnv instanceof JavacProcessingEnvironment) {
 			Options options = ((JavacProcessingEnvironment) this.processingEnv).getContext().get(Options.optionsKey);
 			if(options!= null) {
-				if(!"IndyPlugin".equals(options.get("-Xplugin:"))){
+				final String pluginName = options.get("-Xplugin:");
+				if(pluginName == null || !pluginName.startsWith("IndyPlugin")){//NB: Running maven seems to duplicate name (IndyPluginIndyPlugin)
 					processingEnv.getMessager().printMessage(Kind.ERROR,
 							"You have to include -Xplugin:IndyPlugin compiler argument to use @IndyMethod annotations", element);
 					return false;
