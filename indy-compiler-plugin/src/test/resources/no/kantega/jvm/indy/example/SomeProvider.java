@@ -18,6 +18,10 @@ public class SomeProvider {
 		System.out.println("Actual method called");
 	}
 	
+	public static CallSite invalidSignature() {
+		return null;
+	}
+	
 	
 	private static CallSite nonPublicProviderMethod() {
 		return null;

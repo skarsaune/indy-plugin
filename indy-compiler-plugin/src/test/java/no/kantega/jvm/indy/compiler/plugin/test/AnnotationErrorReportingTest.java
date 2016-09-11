@@ -44,7 +44,26 @@ public class AnnotationErrorReportingTest {
 		result.assertFailure();
 		result.assertOutputText("Implementation method nonCallSiteReturnMethod() must return a CallSite");
 	}
+	
+	@Test
+	public void testReferenceToInvalidReturnValue() {
 
+		ProcessResult result = new ProcessHelper("no/kantega/jvm/indy/example/SomeServiceWithInvalidReturnValue")
+				.compile();
+		result.assertFailure();
+		result.assertOutputText("error: Implementation method delegate() must return a CallSite");
+	}
+	
+	@Test
+	public void testReferenceToInvalidSignature() {
+
+		ProcessResult result = new ProcessHelper("no/kantega/jvm/indy/example/SomeServiceWithInvalidSignatureReference")
+				.compile();
+		result.assertFailure();
+		result.assertOutputText("error: Signature should be Callsite invalidSignature(MethodHandles.Lookup, String, MethodType)");
+	}
+
+	
 	@Test
 	public void testMissingCompilerPluginArgument() {
 

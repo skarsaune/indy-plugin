@@ -15,15 +15,16 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Options;
 
 import no.kantega.jvm.dynamic.annotation.IndyMethod;
 
 /**
- *
+ * Ensure that setup is correct and referenced @IndyMethod is correct
  */
-@SuppressWarnings("restriction")
 @SupportedAnnotationTypes("no.kantega.jvm.dynamic.annotation.IndyMethod")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)//NB: *Latest* supported edition
 public class IndyAnnotationChecker extends AbstractProcessor {
@@ -122,10 +123,22 @@ public class IndyAnnotationChecker extends AbstractProcessor {
 			return false;
 		}
 		
-		//TODO also validate signature
+		if(!isValidSignature(method.getParameters())) {
+
+			processingEnv.getMessager().printMessage(Kind.ERROR,
+					"Signature should be Callsite " + method.name + "(MethodHandles.Lookup, String, MethodType)", element);
+			return false;
 		
+		}
 
 		return true;
+	}
+
+	private boolean isValidSignature(List<VarSymbol> parameters) {
+		return parameters.length() == 3 &&
+				"java.lang.invoke.MethodHandles.Lookup".equals(parameters.get(0).type.toString()) &&
+				"java.lang.String".equals(parameters.get(1).type.toString()) &&
+				"java.lang.invoke.MethodType".equals(parameters.get(2).type.toString()); 
 	}
 
 }
