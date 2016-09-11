@@ -49,7 +49,9 @@ class ProcessHelper {
 		arguments.add(this.version);
 		arguments.add("-target");
 		arguments.add(this.version);
-		arguments.add("-Xplugin:" + this.pluginName);
+		if(this.pluginName != null) {
+			arguments.add("-Xplugin:" + this.pluginName);
+		}
 		arguments.add("-d");
 		arguments.add(classFolder());
 		for(final String resource : this.resources) {
